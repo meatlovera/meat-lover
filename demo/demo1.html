@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>切换</title>
+	<style type="text/css">
+		*{padding: 0;margin: 0;}
+		a{text-decoration: none;}
+		body{padding: 100px;background: #e0e0e0;}
+		.m-content-picbook{
+			position: relative;
+			height: 420px;
+			width: 296px;
+			border: 1px solid #ccc;
+			background: #fff;
+			overflow: hidden;
+		}
+		.m-content-picbook:hover{
+			margin-top: -1px;
+			margin-left: -1px;
+			box-shadow: 0 15px 30px rgba(0,0,0,0.18);
+		}
+		.m-content-picbook .title{
+			text-align: center;
+			color: #ffac13;
+			padding-top: 45px;
+			width: 296px;
+		}
+
+		.m-picbook-lists{
+			width: 296px;
+			/*overflow: hidden;*/
+		}
+		.m-picbook-lists li{float:left;}
+		.m-picbook-lists ul{
+			display: block;
+			width: 1480px;
+			list-style: none;
+			margin-left: -296px;
+		}
+		.m-picbook-item{
+			width: 296px;
+			text-align: center;
+		}
+		.m-picbook-item  a {
+			display: block;
+			color: #333;
+			text-decoration: none;
+			margin-top: 30px;
+		}
+		.m-picbook-item p{
+			color:#ccc;
+			font-size: 14px;
+		}
+		.m-picbook-item p.price{
+			color: #333;
+			line-height: 30px;
+			font-size: 14px;
+		}
+		.m-picbook-item p{
+			font-size: 14px;
+		}
+		.m-picbook-item .more{
+			display: inline-block;
+			border: 1px solid #ffac13;
+			/*width: 100px;*/
+			color: #ffac13;
+			padding: 0 10px;
+			margin-top: 20px;
+			margin-bottom: 16px;
+		}
+		/*左右切换*/
+		.prev a,.next a{
+			display: block;
+			width: 20px;
+			height: 40px;
+			background: rgba(0,0,0,0.3);
+			color: #fff;
+			font-size: 18px;
+			line-height: 40px;
+			text-align: center
+		}
+		.prev a:hover,.next a:hover{
+			background: rgba(0,0,0,0.7);
+		}
+		.prev{
+			position: absolute;
+			left: 0;
+			bottom: 130px;
+
+		}
+		.next{
+			position: absolute;
+			right: 0;
+			bottom: 130px;
+
+		}
+		/*小点点切换*/
+		.m-spot{
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			text-align: center;
+			margin-left: -20px;
+		}
+		.spot{
+			display: inline-block;
+			height: 3px;
+			width: 3px;
+			border: 2px solid #666;
+			background: #ccc;
+			border-radius: 6px;
+			margin-right: 5px;
+		}
+		.on{
+			border: 2px solid #ffac13;
+			background: #fff;
+		}
+
+
+	</style>
+
+	<script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			var prev=$(".prev");
+			var next=$(".next");
+			var spots=$(".spot");
+			var lists=$(".m-picbook-lists");
+			var items=$(".m-picbook-items");
+			var index=1;
+			var timer;
+			function animate(offset){
+				var left = parseInt(lists.css("margin-left")) + offset ;
+				var time = 300;
+				var interval = 10;
+				var speed = offset/(time/interval);
+
+				function go(){
+					if((speed<0 && parseInt(lists.css("margin-left")) > left) || (speed>0 && parseInt(lists.css("margin-left")) < left)){
+						var b = parseInt(lists.css("margin-left")) + speed;
+						lists.css("margin-left",b);
+						setTimeout(go,interval);
+					}else{
+						lists.css("margin-left",left);
+
+						if(left>0){
+							lists.css("margin-left","-596px");
+						}
+						if(left<-596){
+							lists.css("margin-left","0px");
+						}
+					}
+				}
+
+				go();
+			}
+			function showbtn(){
+				$(".on").removeClass("on");
+				$(spots.eq(index-1)).addClass("on");
+			}
+			function play(){
+				timer = setInterval(function(){
+					next.trigger("click");
+				},3000);
+			}
+			function stop(){
+				clearInterval(timer);
+			}
+
+			prev.click(function(){
+				animate(296);
+			
+				if(index<1){
+					index=2;
+				}else{
+					index -= 1;
+				}
+
+				showbtn();
+			});
+			next.click(function(){
+				animate(-296);
+
+				if(index>2){
+					index=1;
+				}else{
+					index += 1;
+				}
+				
+				showbtn();
+			});
+			spots.click(function(){
+				var i = $(this).index();
+				left = i*(-296) ;
+				lists.css("margin-left",left);
+				$(".on").removeClass("on");
+				$(this).addClass("on");
+			});
+			play();
+			$(".m-content-picbook").mouseover(function(){
+				stop();
+			});
+			$(".m-content-picbook").mouseout(function(){
+				play();
+			})
+
+		})
+
+
+
+	</script>
+</head>
+<body>
+
+<div class="m-content-picbook">
+	<div class="title">图书</div>
+	<div class="m-picbook-lists">
+		<ul>
+			<li class="m-picbook-item">
+				<p>千万读者选择</p>
+				<p>震撼来袭！特别彩排版剧本！</p>
+				<a href="#" class="more">前往多看阅读</a>
+				<img src="https://s01.mifile.cn/i/index/more-duokan.jpg">
+			</li>
+			<li class="m-picbook-item">
+				<a href="#"><h3>哈利·波特与被诅咒的孩子</h3></a>
+				<p>震撼来袭！特别彩排版剧本！</p>
+				<p class="price">29.37元</p>
+				<a href="#"><img src="https://i1.mifile.cn/a4/5e5da924-84e3-4959-9e25-5891cdf30757"></a>
+			</li>
+			<li class="m-picbook-item">
+				<a href="#"><h3>好吗好的</h3></a>
+				<p>讲给你听，好吗好的！</p>
+				<p class="price">17.99元</p>
+				<a href="#"><img src="https://i1.mifile.cn/a4/61e1385e-54de-48f3-8717-5e4f4b1cdd14"></a>
+			</li>
+			<li class="m-picbook-item">
+				<p>千万读者选择</p>
+				<p>震撼来袭！特别彩排版剧本！</p>
+				<a href="#" class="more">前往多看阅读</a>
+				<img src="https://s01.mifile.cn/i/index/more-duokan.jpg">
+			</li>
+			<li class="m-picbook-item">
+				<a href="#"><h3>哈利·波特与被诅咒的孩子</h3></a>
+				<p>震撼来袭！特别彩排版剧本！</p>
+				<p class="price">29.37元</p>
+				<a href="#"><img src="https://i1.mifile.cn/a4/5e5da924-84e3-4959-9e25-5891cdf30757"></a>
+			</li>
+		</ul>
+	</div>
+
+
+	<!-- 左右切换按钮 -->
+	<div class="prev"><a href="javascript:;">&lt;</a></div>
+	<div class="next"><a href="javascript:;">&gt;</a></div>
+
+	<!-- 小点点切换 -->
+	<div class="m-spot">
+		<a href="javascript:;" class="spot on"></a>
+		<a href="javascript:;" class="spot"></a>
+		<a href="javascript:;" class="spot"></a>
+	</div>
+
+
+
+
+</div>
+
+
+</body>
+</html>
